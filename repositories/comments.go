@@ -11,6 +11,7 @@ import (
 
 func InsertComment(db *sql.DB, comment models.Comment) (models.Comment, error) {
 	const sqlStr = `
+	
 	insert into comments (article_id, message, created_at) values
 	(?, ?, now());
 `
