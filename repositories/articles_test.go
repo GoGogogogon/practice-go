@@ -163,10 +163,10 @@ func TestInsertArticle(t *testing.T) {
 func TestUpdateNiceNum(t *testing.T) {
 
 	articles := models.Article{
-		NiceNum: 5,
+		ID:      2,
+		NiceNum: 4,
 	}
-
-	expectedNiceNum := 6
+	expectedNiceNum := 5
 
 	// 	1. テスト結果にて期待する値を定義
 	// 2. テスト対象となる関数を実行
@@ -178,15 +178,22 @@ func TestUpdateNiceNum(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if articles.NiceNum != expectedNiceNum {
-		t.Errorf("get %d  but want %d", articles.NiceNum, expectedNiceNum)
-	}
-
 	t.Cleanup(func() {
-		const sqrstr = `update NiceNum from articles;
-						set NiceNum = NiceNum - 1;
-						where articles.id = ?
+		const sqrstr = `update articles
+						set nice = nice - 1
+						where article_id = ?;
 						`
 		testDB.Exec(sqrstr, articles.ID)
 	})
+
+	getArticles, err := repositories.SelectArticleDetail(testDB, articles.ID)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if getArticles.NiceNum != expectedNiceNum {
+		t.Errorf("get %d  but want %d", getArticles.NiceNum, expectedNiceNum)
+	}
+
 }
