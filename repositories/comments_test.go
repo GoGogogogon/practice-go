@@ -7,7 +7,7 @@ import (
 	"github.com/GoGogogogon/api/repositories"
 )
 
-func TestInsertComent(t *testing.T) {
+func TestInsertComment(t *testing.T) {
 
 	comments := models.Comment{
 		ArticleID: 3,
