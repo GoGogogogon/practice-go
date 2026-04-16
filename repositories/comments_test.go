@@ -36,4 +36,8 @@ func TestInsertComment(t *testing.T) {
 
 func TestSelectCommentList(t *testing.T) {
 
+	test := []struct {
+		testTitle string
+		expected  models.Comment
+	}{}
 }
