@@ -71,7 +71,6 @@ func TestSelectCommentList(t *testing.T) {
 			}
 
 			if comments[i].CommentID != test[i].expected[i].CommentID {
-
 			}
 		})
 	}
