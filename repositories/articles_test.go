@@ -5,26 +5,11 @@ import (
 
 	"github.com/GoGogogogon/api/models"
 	"github.com/GoGogogogon/api/repositories"
+	"github.com/GoGogogogon/api/repositories/testdata"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func TestSelectArtileDetail(t *testing.T) {
-
-	//データのオープン。そもそも読み込めなければt.fatalで強制終了
-	//終わったら db.closeで閉じる
-
-	// expected := models.Article{
-	// 	ID:       1,
-	// 	Title:    "firstPost",
-	// 	Contents: "This is my first blog",
-	// 	UserName: "saki",
-	// 	NiceNum:  3,
-	// }
-
-	//↑みたいに一々定義するのは
-	// テストケースは増えて面倒になる
-
-	//↓のようにまとめて構造体にする
 
 	test := []struct {
 		testTitle string
@@ -33,56 +18,14 @@ func TestSelectArtileDetail(t *testing.T) {
 		{
 			// ID1番
 			testTitle: "subject",
-			expected: models.Article{
-				ID:       1,
-				Title:    "firstPost",
-				Contents: "This is my first blog",
-				UserName: "saki",
-				NiceNum:  2,
-			},
+			expected:  testdata.ArticTestData[1],
 		}, {
+
 			//ID2番
 			testTitle: "subject2",
-			expected: models.Article{
-				ID:       2,
-				Title:    "2nd",
-				Contents: "Second blog post",
-				UserName: "saki",
-				NiceNum:  4,
-			},
+			expected:  testdata.ArticTestData[2],
 		},
 	}
-	//got, err := repositories.SelectArticleDetail(db, expected.ID)
-	// 	if err != nil {
-	// 		t.Fatal(err)
-	// 		//データベース接続に失敗したときとかに使う
-	// 		//その後の処理は行われない
-	// 	}
-
-	// 	if got.ID != expected.ID {
-	// 		t.Errorf("get %d but want %d", got.ID, expected.ID)
-	// 		//テストは失敗するが、その後の処理が続けられる
-	// 	}
-
-	// 	if got.Title != expected.Title {
-	// 		t.Errorf("get %s but want %s", got.Title, expected.Title)
-	// 	}
-
-	// 	if got.Contents != expected.Contents {
-	// 		t.Errorf("get %s but want %s", got.Contents, expected.Contents)
-	// 	}
-
-	// 	if got.UserName != expected.UserName {
-	// 		t.Errorf("got %s but want %s", got.UserName, expected.UserName)
-	// 	}
-
-	// 	if got.NiceNum != expected.NiceNum {
-	// 		t.Errorf("got %d but want %d", got.NiceNum, expected.NiceNum)
-	// 	}
-	// }
-	//↑　一々書くのが面倒だし、量が増えたら大変
-	//↓for文でリファクタリングする
-
 	for _, test := range test {
 		// _ には本来ループした回数が入る
 		t.Run(test.testTitle, func(t *testing.T) {
@@ -116,11 +59,7 @@ func TestSelectArtileDetail(t *testing.T) {
 
 func TestSelectArticleList(t *testing.T) {
 
-	//データベースの準備
-	//select .. detailと同じ処理をしている　非効率
-
-	//テスト対象の関数
-	expectedNum := 2
+	expectedNum := len(testdata.ArticTestData)
 	got, err := repositories.SelectArticleList(testDB, 1)
 	if err != nil {
 		t.Fatal(err)
