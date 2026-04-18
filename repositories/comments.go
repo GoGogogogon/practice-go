@@ -62,20 +62,18 @@ func SelectCommentList(db *sql.DB, articleID int) ([]models.Comment, error) {
 
 		err := result.Scan(&comment.CommentID, &comment.ArticleID, &comment.Message, &created_time)
 
+		if err != nil {
+			fmt.Println(err)
+		}
 		if created_time.Valid {
 			comment.CreatedAt = created_time.Time
 		}
-
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			commentArray = append(commentArray, comment)
-		}
+		commentArray = append(commentArray, comment)
 
 	}
 
 	// (問 6) 指定 ID の記事についたコメント一覧をデータベースから取得して、
 	// それを `models.Comment`構造体のスライス `[]models.Comment`に詰めて返す処理
 	//return commentArray, nil
-	return commentArray, err
+	return commentArray, nil
 }

@@ -162,38 +162,43 @@ func TestInsertArticle(t *testing.T) {
 
 func TestUpdateNiceNum(t *testing.T) {
 
-	articles := models.Article{
-		ID:      2,
-		NiceNum: 4,
-	}
-	expectedNiceNum := 5
+	articlesID := 1
 
 	// 	1. テスト結果にて期待する値を定義
 	// 2. テスト対象となる関数を実行
 	// 3. 2の結果と 1の値を比較
 	// 一致したらテスト成功、不一致ならテスト失敗
-	err := repositories.UpdateNiceNum(testDB, articles.ID)
+
+	before, err := repositories.SelectArticleDetail(testDB, articlesID)
+
+	if err != nil {
+		t.Fatal("fail to get before")
+	}
+
+	// before 4
+
+	// t.Cleanup(func() {
+	// 	const sqrstr = `update articles
+	// 					set nice = nice - 1
+	// 					where article_id = ?;
+	// 					`
+	// 	testDB.Exec(sqrstr, articles.ID)
+	// })
+
+	err = repositories.UpdateNiceNum(testDB, articlesID)
 
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	t.Cleanup(func() {
-		const sqrstr = `update articles
-						set nice = nice - 1
-						where article_id = ?;
-						`
-		testDB.Exec(sqrstr, articles.ID)
-	})
-
-	getArticles, err := repositories.SelectArticleDetail(testDB, articles.ID)
+	after, err := repositories.SelectArticleDetail(testDB, articlesID)
 
 	if err != nil {
-		t.Fatal(err)
+		t.Fatal("fail to get after")
 	}
 
-	if getArticles.NiceNum != expectedNiceNum {
-		t.Errorf("get %d  but want %d", getArticles.NiceNum, expectedNiceNum)
+	if after.NiceNum-before.NiceNum != 1 {
+		t.Errorf("fail to update nicenum")
 	}
 
 }
