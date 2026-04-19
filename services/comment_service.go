@@ -7,8 +7,7 @@ import (
 
 func PostCommentService(comment models.Comment) (models.Comment, error) {
 
-	var Comment models.Comment
-	db, err := conenctDB()
+	db, err := connectDB()
 
 	if err != nil {
 		return models.Comment{}, nil
@@ -16,11 +15,11 @@ func PostCommentService(comment models.Comment) (models.Comment, error) {
 
 	defer db.Close()
 
-	CoomentList, err := repositories.InsertComment(db, Comment)
+	CommentList, err := repositories.InsertComment(db, comment)
 
 	if err != nil {
 		return models.Comment{}, err
 	}
 
-	return CoomentList, nil
+	return CommentList, nil
 }
