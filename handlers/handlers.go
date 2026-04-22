@@ -8,6 +8,8 @@ import (
 	"strconv"
 
 	"github.com/GoGogogogon/api/models"
+	"github.com/GoGogogogon/api/services"
+	"github.com/gorilla/mux"
 )
 
 func HelloHandler(w http.ResponseWriter, req *http.Request) {
@@ -71,9 +73,15 @@ func ArticleListHandler(w http.ResponseWriter, req *http.Request) {
 
 	log.Print(page)
 
-	reqArticle := []models.Article{models.Article1, models.Article2} //Article1とArticle2のスライス
+	//reqArticle := []models.Article{models.Article1, models.Article2} //Article1とArticle2のスライス
 
-	json.NewEncoder(w).Encode(reqArticle)
+	articleList, err := services.GetArticleListService(page)
+
+	if err != nil {
+		http.Error(w, "fail internal exec", http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(articleList)
 
 	// resString := fmt.Sprintf("Article List (page %d)\n", page)
 	// io.WriteString(w, resString)
@@ -91,15 +99,25 @@ func ArticleListHandler(w http.ResponseWriter, req *http.Request) {
 
 func ArticleDetailHandler(w http.ResponseWriter, req *http.Request) {
 
-	// articleid, err := strconv.Atoi(mux.Vars(req)["id"])
-	// if err != nil {
-	// 	http.Error(w, "Invaild query paramenter", http.StatusBadRequest)
-	// 	return
-	// }
+	articleid, err := strconv.Atoi(mux.Vars(req)["id"])
+	if err != nil {
+		http.Error(w, "Invaild query paramenter", http.StatusBadRequest)
+		return
+	}
 	// resstring := fmt.Sprintf("Article No.%d\n", articleid)
 	// io.WriteString(w, resstring)
 
-	article := models.Article1
+	// log.Print(articleid)
+	// article := models.Article1
+
+	// articleに指定したIDのarticleのないっ用を代入する
+
+	article, err := services.GetArticleService(articleid)
+
+	if err != nil {
+		http.Error(w, "fail to internal exec\n", http.StatusInternalServerError)
+		return
+	}
 
 	json.NewEncoder(w).Encode(article)
 	// jsonData, err := json.Marshal(article)
@@ -124,7 +142,7 @@ func PostingNiceHandler(w http.ResponseWriter, req *http.Request) {
 	// }
 
 	// w.Write(jsonData)
-	defer req.Body.Close()
+	// defer req.Body.Close()
 
 	var reqArticle models.Article
 
@@ -133,7 +151,11 @@ func PostingNiceHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(reqArticle)
+	article, err := services.PostNiceService(reqArticle)
+	if err != nil {
+		http.Error(w, "fail internal exec", http.StatusInternalServerError)
+	}
+	json.NewEncoder(w).Encode(article)
 }
 
 func PostingCommentHandler(w http.ResponseWriter, req *http.Request) {
@@ -149,14 +171,20 @@ func PostingCommentHandler(w http.ResponseWriter, req *http.Request) {
 
 	// w.Write(jsonData)
 
-	defer req.Body.Close()
+	//defer req.Body.Close()
 
-	var reqArticle models.Comment
+	var reqComment models.Comment
 
-	if err := json.NewDecoder(req.Body).Decode(&reqArticle); err != nil {
+	if err := json.NewDecoder(req.Body).Decode(&reqComment); err != nil {
 		http.Error(w, "fail to decode json", http.StatusBadRequest)
 		return
 	}
 
-	json.NewEncoder(w).Encode(reqArticle)
+	comment, err := services.PostCommentService(reqComment)
+
+	if err != nil {
+		http.Error(w, "fail internal exec", http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(comment)
 }

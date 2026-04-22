@@ -17,10 +17,14 @@ var (
 	dbConn     = fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s?parseTime=true", dbUser, dbPassword, dbDatabase)
 )
 
+func main() {
+	fmt.Print("gugiiiiiiiiiiiiiii")
+}
 func connectDB() (*sql.DB, error) {
 	db, err := sql.Open("mysql", dbConn)
 	if err != nil {
 		return nil, err
 	}
+
 	return db, nil
 }

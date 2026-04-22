@@ -4,7 +4,7 @@ create table if not exists articles (
     contents text not null,
     username varchar(100) not null,
     nice integer not null,
-    create_at datetime
+    created_at datetime
 );
 
 create table if not exists comments (
@@ -20,8 +20,8 @@ insert into articles(title, contents, username, nice, created_at) values
 
 insert into articles(title, contents, username, nice) values
     ('2nd', 'Second blog post', 'saki', 4);
-insert into comments(articles_id, message, created_at) values
+insert into comments(article_id, message, created_at) values
     (1, '1st comment yeah', now());
 
-insert into commments (article_id, message) values
+insert into comments (article_id, message) values
     (1, 'welcome');
