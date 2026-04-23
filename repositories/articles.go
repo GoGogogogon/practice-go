@@ -155,7 +155,13 @@ func UpdateNiceNum(db *sql.DB, articleID int) error {
 		tx.Rollback()
 		return err
 	}
-	tx.Commit()
+
+	err = tx.Commit()
+	if err != nil {
+		fmt.Print(err)
+		tx.Rollback()
+		return err
+	}
 
 	return nil
 }

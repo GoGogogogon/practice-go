@@ -5,17 +5,9 @@ import (
 	"github.com/GoGogogogon/api/repositories"
 )
 
-func PostCommentService(comment models.Comment) (models.Comment, error) {
+func (s *MyAppService) PostCommentService(comment models.Comment) (models.Comment, error) {
 
-	db, err := connectDB()
-
-	if err != nil {
-		return models.Comment{}, nil
-	}
-
-	defer db.Close()
-
-	CommentList, err := repositories.InsertComment(db, comment)
+	CommentList, err := repositories.InsertComment(s.db, comment)
 
 	if err != nil {
 		return models.Comment{}, err

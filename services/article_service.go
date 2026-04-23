@@ -31,18 +31,9 @@ func GetArticleService(articleID int) (models.Article, error) {
 	return article, err
 }
 
-func PostArticleService(article models.Article) (models.Article, error) {
+func (s *MyAppService) PostArticleService(article models.Article) (models.Article, error) {
 
-	//var created_time sql.NullTime
-
-	db, err := connectDB()
-	if err != nil {
-		return models.Article{}, err
-	}
-
-	defer db.Close()
-
-	ArticleList, err := repositories.InsertArticle(db, article)
+	newArticle, err := repositories.InsertArticle(s.db, article)
 	if err != nil {
 		return models.Article{}, err
 	}
@@ -50,17 +41,12 @@ func PostArticleService(article models.Article) (models.Article, error) {
 	// if created_time.Valid {
 	// 	ArticleList.CreatedAt = created_time.Time
 	// }　ここいらないかも
-	return ArticleList, nil
+	return newArticle, nil
 }
 
-func GetArticleListService(page int) ([]models.Article, error) {
-	db, err := connectDB()
-	if err != nil {
-		return []models.Article{}, err
-	}
-	defer db.Close()
+func (s *MyAppService) GetArticleListService(page int) ([]models.Article, error) {
 
-	ArticleList, err := repositories.SelectArticleList(db, page)
+	ArticleList, err := repositories.SelectArticleList(s.db, page)
 
 	if err != nil {
 		return []models.Article{}, err
@@ -69,15 +55,9 @@ func GetArticleListService(page int) ([]models.Article, error) {
 	return ArticleList, nil
 }
 
-func PostNiceService(article models.Article) (models.Article, error) {
+func (s *MyAppService) PostNiceService(article models.Article) (models.Article, error) {
 
-	db, err := connectDB()
-	if err != nil {
-		return models.Article{}, err
-	}
-	defer db.Close()
-
-	err = repositories.UpdateNiceNum(db, article.ID)
+	err := repositories.UpdateNiceNum(s.db, article.ID)
 
 	if err != nil {
 		return models.Article{}, err
