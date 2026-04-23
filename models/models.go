@@ -20,7 +20,7 @@ type Article struct /*記事の構造体*/ {
 	UserName    string    `json:"user_name"`
 	NiceNum     int       `json:"nice"`
 	CommentList []Comment `json:"comment_list"`
-	CreatedAt   time.Time `json:"created_t"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
 func main() {
