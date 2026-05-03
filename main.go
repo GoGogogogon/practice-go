@@ -7,12 +7,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/GoGogogogon/api/controllers"
-	"github.com/GoGogogogon/api/routers"
-	"github.com/GoGogogogon/api/services"
+	"github.com/GoGogogogon/api/api"
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// グローバル変数
 var (
 	dbUser     = os.Getenv("DB_USER")
 	dbPassword = os.Getenv("DB_PASSWORD")
@@ -28,10 +27,7 @@ func main() {
 		return
 	}
 
-	ser := services.NewMyAppService(db)
-	con := controllers.NewMyAppController(ser)
-
-	r := routers.Router(con)
+	r := api.NewRouter(db)
 
 	log.Println("server start at post 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
